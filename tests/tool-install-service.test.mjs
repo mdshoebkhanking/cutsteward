@@ -1,10 +1,11 @@
 import { describe, expect, it, vi } from "vitest";
+import path from "node:path";
 import { createToolInstallService } from "../server/tool-install-service.mjs";
 
 const localUser = { kind: "local-user", id: "desktop-user" };
 const localAgent = { kind: "local-agent", id: "desktop-agent" };
 const approvalSecret = "framepilot-test-only-approval-secret";
-const projectRoot = "/tmp/framepilot-install-service-test";
+const projectRoot = path.resolve("/tmp/framepilot-install-service-test");
 
 function catalogWith(...tools) {
   return {

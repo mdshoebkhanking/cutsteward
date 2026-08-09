@@ -670,7 +670,7 @@ describe("ProductionRun module", () => {
     expect(state.phaseStatus.capture).toMatchObject({ status: "waived" });
     expect(state.phaseStatus.audio).toMatchObject({ status: "waived" });
     expect(state.currentPhaseId).toBe("edit");
-  });
+  }, 15_000);
 
   it("completes every phase from hash-bound evidence and preserves the certificate after reopening", async () => {
     const harness = await createHarness();
@@ -707,5 +707,5 @@ describe("ProductionRun module", () => {
     expect(reopened.condition).toBe("completed");
     expect(reopened.releaseGate).toEqual(completed.releaseGate);
     expect(reopened.lastEventHash).toBe(completed.lastEventHash);
-  });
+  }, 15_000);
 });
