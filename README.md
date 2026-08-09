@@ -35,12 +35,15 @@ CutSteward interface artwork, restrained motion design, original project-authore
 music, concise English on-screen copy, and verified final encoding. Both public
 demos are intentionally music-led and contain no narration.
 
+**Animated previews — click either preview to watch the full-quality MP4 with
+music.**
+
 <p align="center">
-  <a href="demos/cutsteward-launch-demo-12s.mp4"><img src="demos/posters/cutsteward-launch-demo.jpg" width="720" alt="Play the 12-second CutSteward production cockpit launch film"></a>
+  <a href="demos/cutsteward-launch-demo-12s.mp4"><img src="demos/previews/cutsteward-launch-demo.gif" width="720" alt="Animated preview of the 12-second CutSteward production cockpit launch film"></a>
 </p>
 
 <p align="center">
-  <a href="demos/cutsteward-trust-demo-15s.mp4"><img src="demos/posters/cutsteward-trust-demo.jpg" width="360" alt="Play the 15-second CutSteward trust-first social short"></a>
+  <a href="demos/cutsteward-trust-demo-15s.mp4"><img src="demos/previews/cutsteward-trust-demo.gif" width="360" alt="Animated preview of the 15-second CutSteward trust-first social short"></a>
 </p>
 
 | Demo | Format | What it proves |

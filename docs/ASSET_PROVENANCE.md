@@ -46,6 +46,20 @@ the MIT grant covers project-authored code, interface artwork, motion design,
 copy, and music, while the Pexels source footage remains governed by the source
 license recorded above.
 
+## README animated previews
+
+These silent GIFs are compact, time-compressed derivatives of the verified
+masters above. They exist only so motion is visible directly on the GitHub
+repository homepage; each preview links to its full-quality MP4.
+
+| Preview | Transformation | SHA-256 |
+| --- | --- | --- |
+| `demos/previews/cutsteward-launch-demo.gif` | Complete 12-second master compressed to 6.01s, 640×360, 8 fps, 48 frames, 96-color palette, audio removed. | `0aa1e070f3826b10728da5f5a6ac9bc33cbd3e3507c30c5c49d5a07de48facfb` |
+| `demos/previews/cutsteward-trust-demo.gif` | Complete 15-second master compressed to 6.01s, 360×640, 8 fps, 48 frames, 96-color palette, audio removed. | `7ffcc236c235fbf87b687f7aa90ee27eb1abdb1fabba52297c2ee6044a1b65fd` |
+
+The preview derivatives retain the same mixed-media rights boundary as their
+source masters; they are not standalone redistributions of the stock footage.
+
 ## Fonts
 
 The staged Inter font files are covered by the SIL Open Font License 1.1. Each
