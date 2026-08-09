@@ -166,11 +166,12 @@ English-speaking markets, with premium vertical short-form output and a
 - The current filesystem has about 1.2 GiB free. No user data was deleted. Free
   substantially more space (preferably 5–10 GiB or more) before real 4K source
   acquisition, generation, Blender renders, or multi-pass masters.
-- This directory was not a Git worktree when implementation began. A local
-  `main` repository is now initialized and staged, but it still has zero
-  commits. The intended public repository is `mdshoebkhanking/cutsteward`, and
-  that GitHub repository has **not** been created, pushed, or released; do not
-  imply otherwise.
+- This directory was not a Git worktree when implementation began. It is now a
+  clean local `main` worktree tracking the public repository at
+  `https://github.com/mdshoebkhanking/cutsteward`. The complete source, both
+  verified demo masters, MIT license, and macOS/Windows GitHub Actions workflows
+  have been published. Release/tag state is external to this file and must be
+  verified from the repository's Releases page before it is reported.
 
 ## Next operational steps
 
