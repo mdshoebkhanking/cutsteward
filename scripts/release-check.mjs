@@ -10,12 +10,14 @@ import path from "node:path";
 const require = createRequire(import.meta.url);
 const REQUIRED_DEMOS = [
   "demos/cutsteward-launch-demo-12s.mp4",
-  "demos/cutsteward-trust-demo-15s.mp4"
+  "demos/cutsteward-trust-demo-15s.mp4",
+  "demos/cutsteward-product-walkthrough-30s.mp4"
 ];
 const REQUIRED_DEMO_SET = new Set(REQUIRED_DEMOS);
 const REQUIRED_DEMO_SPECS = new Map([
   [REQUIRED_DEMOS[0], { durationSeconds: 12, width: 1920, height: 1080, frameRate: 30 }],
-  [REQUIRED_DEMOS[1], { durationSeconds: 15, width: 1080, height: 1920, frameRate: 30 }]
+  [REQUIRED_DEMOS[1], { durationSeconds: 15, width: 1080, height: 1920, frameRate: 30 }],
+  [REQUIRED_DEMOS[2], { durationSeconds: 30, width: 1920, height: 1080, frameRate: 30 }]
 ]);
 const MAX_REGULAR_FILE_BYTES = 5 * 1024 * 1024;
 const MAX_DEMO_FILE_BYTES = 25 * 1024 * 1024;
@@ -218,6 +220,14 @@ const SECRET_ASSIGNMENT_PATTERNS = [
   }
 ];
 
+const PROVIDER_RECORD_ID_PATTERNS = [
+  {
+    id: "provider-record-id",
+    expression:
+      /\b(?:provider[\s_-]*)?(?:record|request|generation|history(?:[\s_-]*item)?|job)[\s_-]*id["']?\s*[:=]\s*["']?([A-Za-z0-9][A-Za-z0-9._:-]{11,})/gi
+  }
+];
+
 function isAllowedSecretFixture(value) {
   const digest = createHash("sha256").update(value).digest("hex");
   return ALLOWED_SECRET_FIXTURE_SHA256.has(digest);
@@ -259,6 +269,70 @@ function sensitiveTextFindings(sourcePath, source) {
     }
   }
   return findings;
+}
+
+function sensitiveBinaryStringFindings(sourcePath, source) {
+  const findings = [];
+  for (const { id, expression } of SECRET_PATTERNS) {
+    for (const match of source.matchAll(expression)) {
+      if (isAllowedSecretFixture(match[0])) continue;
+      findings.push(
+        `[metadata-secret] ${sourcePath} binary metadata contains a credential pattern (${id})`
+      );
+    }
+  }
+  for (const { id, expression, valueIndex } of SECRET_ASSIGNMENT_PATTERNS) {
+    for (const match of source.matchAll(expression)) {
+      if (isAllowedSecretFixture(match[valueIndex])) continue;
+      findings.push(
+        `[metadata-secret] ${sourcePath} binary metadata contains a credential assignment (${id})`
+      );
+    }
+  }
+  for (const expression of USER_PATH_PATTERNS) {
+    if (expression.test(source)) {
+      findings.push(
+        `[metadata-path] ${sourcePath} binary metadata contains an absolute user-home path`
+      );
+    }
+    expression.lastIndex = 0;
+  }
+  for (const { id, expression } of PROVIDER_RECORD_ID_PATTERNS) {
+    if (expression.test(source)) {
+      findings.push(
+        `[metadata-id] ${sourcePath} binary metadata contains a private provider record identifier (${id})`
+      );
+    }
+    expression.lastIndex = 0;
+  }
+  return findings;
+}
+
+function* utf16AsciiMetadataStrings(binarySource) {
+  const encodings = [
+    { expression: /(?:[\x20-\x7e]\x00){8,}/g, characterOffset: 0 },
+    { expression: /(?:\x00[\x20-\x7e]){8,}/g, characterOffset: 1 }
+  ];
+  for (const { expression, characterOffset } of encodings) {
+    for (const match of binarySource.matchAll(expression)) {
+      let decoded = "";
+      for (let index = characterOffset; index < match[0].length; index += 2) {
+        decoded += match[0][index];
+      }
+      yield decoded;
+    }
+  }
+}
+
+function binaryMetadataFindings(sourcePath, bytes) {
+  const binarySource = bytes.toString("latin1");
+  const findings = new Set(sensitiveBinaryStringFindings(sourcePath, binarySource));
+  for (const decoded of utf16AsciiMetadataStrings(binarySource)) {
+    for (const finding of sensitiveBinaryStringFindings(sourcePath, decoded)) {
+      findings.add(finding);
+    }
+  }
+  return [...findings];
 }
 
 function hasMp4FileTypeBox(bytes) {
@@ -503,7 +577,10 @@ function main() {
           }
         }
       }
-      if (!looksLikeText(bytes)) continue;
+      if (!looksLikeText(bytes)) {
+        findings.push(...binaryMetadataFindings(entry.path, bytes));
+        continue;
+      }
       const source = bytes.toString("utf8");
       findings.push(...sensitiveTextFindings(entry.path, source));
       if (entry.path.toLowerCase().endsWith(".md")) {

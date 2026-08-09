@@ -1,0 +1,51 @@
+1
+00:00:00,620 --> 00:00:01,720
+Start in Cut Steward,
+
+2
+00:00:01,890 --> 00:00:03,480
+the governed AI video studio.
+
+3
+00:00:04,230 --> 00:00:05,135
+Describe the outcome,
+
+4
+00:00:05,270 --> 00:00:06,795
+then choose how closely you want to guide it.
+
+5
+00:00:07,600 --> 00:00:09,190
+Review rights before anything runs.
+
+6
+00:00:09,295 --> 00:00:10,575
+Inspect every planned shot.
+
+7
+00:00:11,295 --> 00:00:14,350
+Then open a separate verified delivery
+
+8
+00:00:14,460 --> 00:00:15,505
+to review the exact master,
+
+9
+00:00:15,995 --> 00:00:16,870
+its full-decode check,
+
+10
+00:00:16,945 --> 00:00:17,925
+SHA-256 hash,
+
+11
+00:00:18,005 --> 00:00:18,725
+and approval evidence.
+
+12
+00:00:19,410 --> 00:00:21,095
+One clear, local production record—
+
+13
+00:00:21,490 --> 00:00:23,195
+from first plan to final release truth.

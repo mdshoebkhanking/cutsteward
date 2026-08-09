@@ -29,14 +29,19 @@ documented in [the CutSteward brand decision](docs/BRAND_DECISION.md).
 
 ## Watch the demos
 
-The two short launch films are English-first and designed for international
-English-speaking audiences. They combine licensed internet stock, real
-CutSteward interface artwork, restrained motion design, original project-authored
-music, concise English on-screen copy, and verified final encoding. Both public
-demos are intentionally music-led and contain no narration.
+The three English-first films are designed for international English-speaking
+audiences. They combine authentic CutSteward interface evidence, restrained
+motion design, rights-recorded media, concise English copy, and verified final
+encoding. The two short launch films are intentionally music-led with no
+narration; the 30-second product walkthrough adds English narration and a
+real-screen tour of the governed workflow.
 
-**Animated previews — click either preview to watch the full-quality MP4 with
-music.**
+**Animated previews — click any preview to watch the full-quality MP4 with
+audio.**
+
+<p align="center">
+  <a href="demos/cutsteward-product-walkthrough-30s.mp4"><img src="demos/previews/cutsteward-product-walkthrough.gif" width="720" alt="Animated preview of the narrated 30-second CutSteward governed product walkthrough"></a>
+</p>
 
 <p align="center">
   <a href="demos/cutsteward-launch-demo-12s.mp4"><img src="demos/previews/cutsteward-launch-demo.gif" width="720" alt="Animated preview of the 12-second CutSteward production cockpit launch film"></a>
@@ -48,15 +53,23 @@ music.**
 
 | Demo | Format | What it proves |
 | --- | --- | --- |
+| [Governed product walkthrough](demos/cutsteward-product-walkthrough-30s.mp4) | 30s · 16:9 · narrated | Prompt → guidance → rights → planned shots → separate verified delivery → decode/hash/approval proof |
 | [Production cockpit launch film](demos/cutsteward-launch-demo-12s.mp4) | 12s · 16:9 | Brief → visible production → exact approval → verified output |
 | [Trust-first social short](demos/cutsteward-trust-demo-15s.mp4) | 15s · 9:16 | Fast short-form pacing, mobile UI proof, durable receipts, premium CTA |
 
-Raw stock is not redistributed. Exact source pages, rendition hashes, creator
-metadata when verified, and transformation rules are recorded in each demo's
-manifest and in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+The walkthrough truthfully bridges between two separate stored runs: its
+demonstrated planning run did not produce the certified public-safe conformance
+delivery shown later. That delivery uses project-authored test media and
+contains no unrelated private run or user likeness. Raw stock, the source
+Mixkit music file, the raw ElevenLabs voice file, and the Beta Image & Video
+evaluation are not redistributed.
+Exact source pages, rendition hashes, provider-output facts, creator metadata
+when verified, and transformation rules are recorded in each demo's manifest
+and in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
-To reproduce the editable demo compositions after cloning, fetch the two exact
-rights-recorded Pexels renditions and verify their SHA-256 hashes locally:
+To reproduce the two stock-driven editable demo compositions after cloning,
+fetch the exact rights-recorded Pexels renditions and verify their SHA-256
+hashes locally:
 
 ```sh
 npm run demos:assets
@@ -64,7 +77,10 @@ npm run demos:assets
 
 The fetcher accepts only the allowlisted HTTPS media host, follows bounded
 same-host redirects, refuses to replace a mismatched existing file, and stores
-the raw sources only in Git-ignored demo asset folders.
+the raw sources only in Git-ignored demo asset folders. The narrated
+walkthrough's editable HyperFrames project, capture evidence, captions, audio
+mix, and generation receipt are retained in
+[`videos/cutsteward-30s-promo`](videos/cutsteward-30s-promo/README.md).
 
 ## Why CutSteward is different
 

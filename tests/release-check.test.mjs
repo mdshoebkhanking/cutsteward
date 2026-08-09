@@ -13,6 +13,10 @@ const temporaryDirectories = [];
 let mediaFixtureDirectory;
 let validLaunchDemo;
 let validTrustDemo;
+let validWalkthroughDemo;
+let sensitiveMetadataLaunchDemo;
+let sensitiveMetadataValues;
+let wrongDurationWalkthroughDemo;
 let wrongDurationLaunchDemo;
 let wrongDimensionsLaunchDemo;
 let wrongFrameRateLaunchDemo;
@@ -86,6 +90,28 @@ async function createMediaFixture({
   return readFile(outputPath);
 }
 
+async function createMediaMetadataFixture({ filename, sourceFilename, metadata }) {
+  const outputPath = path.join(mediaFixtureDirectory, filename);
+  const ffmpegExport = require("ffmpeg-static");
+  const ffmpeg = typeof ffmpegExport === "string" ? ffmpegExport : ffmpegExport?.path;
+  if (!ffmpeg) throw new Error("The project-local FFmpeg test dependency is unavailable");
+  const result = run(ffmpeg, [
+    "-hide_banner",
+    "-loglevel", "error",
+    "-i", path.join(mediaFixtureDirectory, sourceFilename),
+    "-map", "0",
+    "-c", "copy",
+    ...Object.entries(metadata).flatMap(([key, value]) => ["-metadata", `${key}=${value}`]),
+    "-movflags", "+faststart+use_metadata_tags",
+    "-y",
+    outputPath
+  ]);
+  if (result.status !== 0) {
+    throw new Error("Project-local FFmpeg could not create a metadata test fixture");
+  }
+  return readFile(outputPath);
+}
+
 async function createRepository(files) {
   const directory = await mkdtemp(path.join(tmpdir(), "cutsteward-release-check-test-"));
   temporaryDirectories.push(directory);
@@ -106,6 +132,7 @@ function validReleaseFiles(extra = {}) {
   return {
     "demos/cutsteward-launch-demo-12s.mp4": validLaunchDemo,
     "demos/cutsteward-trust-demo-15s.mp4": validTrustDemo,
+    "demos/cutsteward-product-walkthrough-30s.mp4": validWalkthroughDemo,
     ...extra
   };
 }
@@ -132,6 +159,32 @@ beforeAll(async () => {
     duration: 15,
     width: 1080,
     height: 1920
+  });
+  sensitiveMetadataValues = {
+    secret: ["sk", "proj", "M".repeat(32)].join("-"),
+    privatePath: ["", "Users", "binary-owner", "private", "source.mov"].join("/"),
+    providerRecordId: ["elevenlabs", "generation", "record", "R".repeat(24)].join("_")
+  };
+  sensitiveMetadataLaunchDemo = await createMediaMetadataFixture({
+    filename: "launch-sensitive-metadata.mp4",
+    sourceFilename: "launch.mp4",
+    metadata: {
+      title: `token=${sensitiveMetadataValues.secret}`,
+      comment: `source=${sensitiveMetadataValues.privatePath}`,
+      description: `history_item_id=${sensitiveMetadataValues.providerRecordId}`
+    }
+  });
+  validWalkthroughDemo = await createMediaFixture({
+    filename: "walkthrough.mp4",
+    duration: 30,
+    width: 1920,
+    height: 1080
+  });
+  wrongDurationWalkthroughDemo = await createMediaFixture({
+    filename: "walkthrough-29s.mp4",
+    duration: 29,
+    width: 1920,
+    height: 1080
   });
   wrongDurationLaunchDemo = await createMediaFixture({
     filename: "launch-11s.mp4",
@@ -233,6 +286,28 @@ describe("public release gate", () => {
     expect(result.stderr).not.toContain(userName);
   });
 
+  it("rejects secrets, private paths, and provider record IDs in staged binary metadata", async () => {
+    const files = validReleaseFiles();
+    files["demos/cutsteward-launch-demo-12s.mp4"] = sensitiveMetadataLaunchDemo;
+    const directory = await createRepository(files);
+
+    const result = runReleaseCheck(directory);
+
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain(
+      "[metadata-secret] demos/cutsteward-launch-demo-12s.mp4"
+    );
+    expect(result.stderr).toContain(
+      "[metadata-path] demos/cutsteward-launch-demo-12s.mp4"
+    );
+    expect(result.stderr).toContain(
+      "[metadata-id] demos/cutsteward-launch-demo-12s.mp4"
+    );
+    expect(result.stderr).not.toContain(sensitiveMetadataValues.secret);
+    expect(result.stderr).not.toContain("binary-owner");
+    expect(result.stderr).not.toContain(sensitiveMetadataValues.providerRecordId);
+  });
+
   it("allows larger public demos but rejects an ordinary file over five MiB", async () => {
     const sixMiB = 6 * 1024 * 1024;
     const directory = await createRepository({
@@ -288,6 +363,20 @@ describe("public release gate", () => {
     expect(result.status).toBe(1);
     expect(result.stderr).toContain(
       "[media-spec] demos/cutsteward-launch-demo-12s.mp4 must be exactly 12.000 seconds"
+    );
+  });
+
+  it("rejects the public product walkthrough unless it is exactly thirty seconds", async () => {
+    const files = validReleaseFiles();
+    files["demos/cutsteward-product-walkthrough-30s.mp4"] =
+      wrongDurationWalkthroughDemo;
+    const directory = await createRepository(files);
+
+    const result = runReleaseCheck(directory);
+
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain(
+      "[media-spec] demos/cutsteward-product-walkthrough-30s.mp4 must be exactly 30.000 seconds"
     );
   });
 

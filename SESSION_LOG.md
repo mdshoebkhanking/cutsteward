@@ -71,7 +71,7 @@ English-speaking markets, with premium vertical short-form output and a
 
 ## Validation completed
 
-- `npm test -- --maxWorkers=1 --no-file-parallelism`: **37 files / 217 tests**
+- `npm test -- --maxWorkers=1 --no-file-parallelism`: **37 files / 219 tests**
   passed after the CutSteward branding, release checks, provider-action,
   stock-search, installer, browser, execution, authority, and cockpit
   integrations.
@@ -87,11 +87,13 @@ English-speaking markets, with premium vertical short-form output and a
   Remotion remains an optional, uninstalled extension. Codex app-server is live
   and conformant; Claude is detected but deliberately handoff-only; Gemini CLI,
   Hermes, Kimi, and Antigravity are not currently installed/detected.
-- The staged-index release checker now rejects fake MP4 headers and performs
-  bounded project-local FFprobe inspection plus full FFmpeg decode. It enforces
-  the two public demos' exact duration, dimensions, 30 fps rate, and audio
-  stream. Its focused suite passes 14/14. The final staged release candidate
-  passes with 243 tracked files totaling 29,937,276 bytes.
+- The staged-index release checker rejects fake MP4 headers, performs bounded
+  project-local FFprobe inspection plus full FFmpeg decode, and scans binary
+  ASCII/UTF-16 metadata for redacted secret, private-path, and provider-record
+  leaks. It enforces all three public demos' exact duration, dimensions, 30 fps
+  rate, and audio stream. Its focused suite passes 16/16. The final staged
+  candidate passes with 288 tracked files; the release-check output is the
+  authoritative total-byte record for the exact staged index.
 - Provider health: ElevenLabs, Google Veo, and Pexels/Pixabay adapters are
   registered but configuration-required because no provider credentials are
   stored in the project or current server environment.
@@ -130,12 +132,29 @@ English-speaking markets, with premium vertical short-form output and a
   decodes produced identical raw frame bytes, and direct HyperFrames snapshots
   were healthy. Repacking the same PNG pixels without compression displayed
   correctly, so no source change or third render was justified.
-- Both public masters are byte-identical to their QA-passed visual-review
-  renders. Their CutSteward CTA posters were extracted from the immutable
+- Narrated product walkthrough:
+  `demos/cutsteward-product-walkthrough-30s.mp4`
+  (SHA-256
+  `09822c55be4fe00e576f76cbf249daca89b1a6e436458908e826e447df7c1989`,
+  15,719,941 bytes). It is 1920x1080, H.264 High/yuv420p limited BT.709,
+  exact 30 fps CFR with 900 decoded frames and exact 30.000-second AAC-LC
+  48 kHz stereo audio. Full A/V decode, black/blank scan, all 13 caption
+  moments, every major seam, separate-run truth boundary, and final CTA passed
+  independent QA. Loudness is -16.2 LUFS with -1.0 dBTP.
+- The walkthrough uses four authentic local CutSteward screen recordings,
+  including a dedicated project-authored public-safe conformance delivery, one
+  ElevenLabs Ben/Eleven v3 English narration generation, and Mixkit's `Close
+  Up` by Michael Ramir C. Exactly one Image & Video evaluation and one TTS
+  submit were made; the observed balance change was 9,067 credits, with no
+  retry, upscale, extension, lip sync, music generation, purchase, or top-up.
+  The provider documents Image & Video as Beta, so that evaluation is local,
+  Git-ignored, and absent from the released master.
+- All three public masters are byte-identical to their QA-passed source
+  renders. Their CutSteward posters/previews were extracted from immutable
   masters, visually reviewed, hashed, linked from the README, and recorded in
-  `docs/ASSET_PROVENANCE.md`. The user explicitly chose a no-voice release, so
-  no Gemini credential, provider call, synthetic speech asset, or spend is part
-  of this release.
+  `docs/ASSET_PROVENANCE.md`. The 12-second and 15-second demos remain
+  intentionally music-led with no narration; only the 30-second walkthrough is
+  narrated.
 
 ## Completed integration checkpoint
 
@@ -163,7 +182,7 @@ English-speaking markets, with premium vertical short-form output and a
 - Provider credentials and authenticated website sessions are not present in
   the repository. Real generations cannot be claimed until the user configures
   or signs in and approves an exact action.
-- The current filesystem has about 1.2 GiB free. No user data was deleted. Free
+- The current filesystem has about 0.2 GiB free. No user data was deleted. Free
   substantially more space (preferably 5–10 GiB or more) before real 4K source
   acquisition, generation, Blender renders, or multi-pass masters.
 - This directory was not a Git worktree when implementation began. It is now a

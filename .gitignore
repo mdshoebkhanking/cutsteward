@@ -25,6 +25,16 @@ videos/framepilot-trust-demo/capture/assets/live-cockpit-*.png
 
 # Generated/private media workspaces. Curated public demos live in /demos.
 videos/aura-film/
+videos/cutsteward-30s-promo/.media/
+videos/cutsteward-30s-promo/.thumbnails/
+videos/cutsteward-30s-promo/assets/audio/*.wav
+videos/cutsteward-30s-promo/assets/audio/*.mp3
+videos/cutsteward-30s-promo/assets/elevenlabs/cutsteward-voice-ben-v3.mp3
+videos/cutsteward-30s-promo/assets/elevenlabs/filmstrip-veo31-fast-4s.mp4
+videos/cutsteward-30s-promo/assets/screen-recordings/04-verified-delivery.webm
+videos/cutsteward-30s-promo/assets/screen-recordings/04-verified-delivery-public-redacted*.mp4
+videos/cutsteward-30s-promo/qa/04-verified-delivery-sheet.jpg
+videos/cutsteward-30s-promo/qa/elevenlabs-filmstrip-contact.jpg
 videos/**/assets/stock/source/
 videos/**/assets/pexels-*.mp4
 videos/**/snapshots/
