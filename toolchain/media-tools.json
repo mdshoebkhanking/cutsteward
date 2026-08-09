@@ -1,0 +1,117 @@
+{
+  "schemaVersion": 1,
+  "policy": {
+    "supportedPlatforms": ["darwin", "win32"],
+    "installRoot": ".framepilot/tools",
+    "requireApprovalForSystemChanges": true,
+    "neverAutoInstallUnsignedRepositories": true,
+    "neverClaimManualAppsAreCliControlled": true
+  },
+  "tools": [
+    {
+      "id": "ffmpeg",
+      "name": "FFmpeg + ffprobe",
+      "tier": "required",
+      "kind": "cli",
+      "executables": ["ffmpeg", "ffprobe"],
+      "probeArgs": ["-version"],
+      "capabilities": ["inspect", "transcode", "compose", "audio", "captions", "quality-check"],
+      "officialUrl": "https://ffmpeg.org/download.html",
+      "install": {
+        "darwin": { "manager": "brew", "args": ["install", "ffmpeg"] },
+        "win32": { "manager": "winget", "args": ["install", "--id", "Gyan.FFmpeg", "--exact", "--accept-package-agreements", "--accept-source-agreements"] }
+      }
+    },
+    {
+      "id": "capcut-cli",
+      "name": "CapCut CLI (community)",
+      "tier": "required",
+      "kind": "project-cli",
+      "executables": ["capcut"],
+      "probeArgs": ["--version"],
+      "version": "0.17.2",
+      "npmPackage": "capcut-cli",
+      "npmIntegrity": "sha512-wbxAX2npJwZ2atMWXCLFKOj3h7OgxfXY0Vq3DEfpmCvLtF0sQ/UdGTQBkobAD4jsejRfIZZek0S4VlLFULfxWw==",
+      "capabilities": ["capcut-draft-inspect", "draft-edit", "subtitles", "templates", "jsonl-runner"],
+      "officialUrl": "https://github.com/renezander030/capcut-cli",
+      "disclaimer": "Independent community project; not affiliated with ByteDance. Versions below 0.17.1 are forbidden by policy.",
+      "install": {
+        "darwin": { "projectDependency": true, "package": "capcut-cli@0.17.2" },
+        "win32": { "projectDependency": true, "package": "capcut-cli@0.17.2" }
+      }
+    },
+    {
+      "id": "blender",
+      "name": "Blender",
+      "tier": "large-optional",
+      "kind": "cli-and-desktop",
+      "executables": ["blender"],
+      "probeArgs": ["--version"],
+      "applicationPaths": {
+        "darwin": ["/Applications/Blender.app/Contents/MacOS/Blender"],
+        "win32": ["%PROGRAMFILES%/Blender Foundation/Blender/blender.exe"]
+      },
+      "capabilities": [
+        "3d-scenes",
+        "device-mockup",
+        "camera-lighting",
+        "screen-image-texture",
+        "screen-video-texture",
+        "screen-replacement",
+        "rgba-frame-sequence",
+        "background-render",
+        "python-automation"
+      ],
+      "trustedDriver": "toolchain/blender/device_stage.py",
+      "officialUrl": "https://www.blender.org/download/",
+      "install": {
+        "darwin": { "manager": "brew", "args": ["install", "--cask", "blender"] },
+        "win32": { "manager": "winget", "args": ["install", "--id", "BlenderFoundation.Blender", "--exact", "--accept-package-agreements", "--accept-source-agreements"] }
+      }
+    },
+    {
+      "id": "capcut",
+      "name": "CapCut Desktop",
+      "tier": "manual-optional",
+      "kind": "desktop-handoff",
+      "executables": [],
+      "applicationPaths": {
+        "darwin": ["/Applications/CapCut.app"],
+        "win32": ["%LOCALAPPDATA%/CapCut/Apps/CapCut.exe", "%PROGRAMFILES%/CapCut/CapCut.exe"]
+      },
+      "capabilities": ["interactive-editing", "desktop-handoff", "review-community-cli-drafts"],
+      "officialUrl": "https://www.capcut.com/resource/capcut-desktop-download",
+      "install": {
+        "darwin": { "manual": true, "reason": "Official documentation describes an interactive signed desktop installer, not a supported CLI." },
+        "win32": { "manual": true, "reason": "Official documentation describes an interactive signed desktop installer, not a supported CLI." }
+      }
+    },
+    {
+      "id": "remotion",
+      "name": "Remotion",
+      "tier": "workflow-optional",
+      "kind": "project-extension",
+      "executables": [],
+      "capabilities": ["react-video-composition", "programmatic-render"],
+      "officialUrl": "https://www.remotion.dev/docs/",
+      "install": {
+        "darwin": { "projectExtension": true },
+        "win32": { "projectExtension": true }
+      }
+    },
+    {
+      "id": "git",
+      "name": "Git",
+      "tier": "required-for-repositories",
+      "kind": "cli",
+      "executables": ["git"],
+      "probeArgs": ["--version"],
+      "capabilities": ["pinned-repositories", "adapter-source"],
+      "officialUrl": "https://git-scm.com/downloads",
+      "install": {
+        "darwin": { "manual": true, "reason": "Use Apple Command Line Tools or the official installer." },
+        "win32": { "manager": "winget", "args": ["install", "--id", "Git.Git", "--exact", "--accept-package-agreements", "--accept-source-agreements"] }
+      }
+    }
+  ]
+}

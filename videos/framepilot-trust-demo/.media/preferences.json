@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "preferences": {
+    "destination": {
+      "value": "instagram-reels-youtube-shorts",
+      "confirmed_in": [
+        "framepilot-trust-demo"
+      ],
+      "updated_at": "2026-08-08T23:09:34.836Z"
+    },
+    "aspect": {
+      "value": "1080x1920",
+      "confirmed_in": [
+        "framepilot-trust-demo"
+      ],
+      "updated_at": "2026-08-08T23:09:34.879Z"
+    },
+    "language": {
+      "value": "en",
+      "confirmed_in": [
+        "framepilot-trust-demo"
+      ],
+      "updated_at": "2026-08-08T23:09:34.922Z"
+    },
+    "flow": {
+      "value": "automation",
+      "confirmed_in": [
+        "framepilot-trust-demo"
+      ],
+      "updated_at": "2026-08-08T23:09:34.966Z"
+    },
+    "storyboard": {
+      "value": "no",
+      "confirmed_in": [
+        "framepilot-trust-demo"
+      ],
+      "updated_at": "2026-08-08T23:09:35.010Z"
+    },
+    "voice": {
+      "value": "Gemini API · natural American male · early-30s · warm, controlled, emotionally grounded",
+      "confirmed_in": [
+        "framepilot-trust-demo"
+      ],
+      "updated_at": "2026-08-08T23:09:35.053Z"
+    }
+  },
+  "sightings": {}
+}

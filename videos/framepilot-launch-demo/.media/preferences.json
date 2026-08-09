@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "preferences": {
+    "flow": {
+      "value": "automation",
+      "confirmed_in": [
+        "framepilot-launch-demo"
+      ],
+      "updated_at": "2026-08-08T22:51:25.703Z"
+    },
+    "storyboard": {
+      "value": "no",
+      "confirmed_in": [
+        "framepilot-launch-demo"
+      ],
+      "updated_at": "2026-08-08T22:51:25.803Z"
+    },
+    "language": {
+      "value": "en",
+      "confirmed_in": [
+        "framepilot-launch-demo"
+      ],
+      "updated_at": "2026-08-08T22:51:25.901Z"
+    }
+  },
+  "sightings": {}
+}

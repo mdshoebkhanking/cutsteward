@@ -1,0 +1,6 @@
+{"id":"image_001","type":"image","path":"assets/cutsteward-final-review.png","source":"existing","description":"CutSteward final review","provenance":{"provider":"local","adopted":true}}
+{"id":"image_002","type":"image","path":"assets/cutsteward-plan-approval.png","source":"existing","description":"CutSteward run approval","provenance":{"provider":"local","adopted":true}}
+{"id":"image_003","type":"image","path":"assets/cutsteward-production-cockpit.png","source":"existing","description":"live cockpit desktop spec","provenance":{"provider":"local","adopted":true}}
+{"id":"image_004","type":"image","path":"assets/cutsteward-mobile-cockpit.png","source":"existing","description":"live cockpit mobile spec","provenance":{"provider":"local","adopted":true}}
+{"id":"video_001","type":"video","path":"assets/pexels-12893579-hands-laptop-vertical.mp4","source":"existing","description":"pexels 12893579 hands laptop vertical","provenance":{"provider":"local","adopted":true}}
+{"id":"video_002","type":"video","path":"assets/stock/source/pexels-12893579-hands-laptop-vertical.mp4","source":"existing","description":"pexels 12893579 hands laptop vertical","provenance":{"provider":"local","adopted":true}}

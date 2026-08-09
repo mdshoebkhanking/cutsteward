@@ -1,0 +1,601 @@
+{
+  "schemaVersion": 1,
+  "truthStateVocabulary": [
+    "unavailable",
+    "installed",
+    "configured",
+    "authenticated",
+    "capability_verified",
+    "generation_verified",
+    "qa_verified"
+  ],
+  "policy": {
+    "supportedPlatforms": ["darwin", "win32"],
+    "initialTruthState": "unavailable",
+    "credentialsAreNamesOnly": true,
+    "externalUploadRequiresApproval": true,
+    "quotaOrCashUseRequiresApproval": true,
+    "rightsEvidenceRequiredBeforeUse": true,
+    "syntheticMediaMustBeDisclosed": true
+  },
+  "adapters": [
+    {
+      "id": "elevenlabs-timed-tts",
+      "name": "ElevenLabs timed text to speech",
+      "truthState": "unavailable",
+      "access": {
+        "mode": "cloud-api",
+        "execution": "cloud",
+        "platforms": ["darwin", "win32"],
+        "endpoint": "https://api.elevenlabs.io/v1/text-to-speech/{voice_id}/with-timestamps",
+        "authentication": "environment-variable"
+      },
+      "capabilities": [
+        "text-to-speech",
+        "character-timestamps",
+        "normalized-character-timestamps",
+        "long-form-context-stitching",
+        "natural-synthetic-voice"
+      ],
+      "credentialVariables": ["ELEVENLABS_API_KEY"],
+      "gates": {
+        "upload": {
+          "policy": "conditional",
+          "reason": "Approve sending the script and any reference audio to ElevenLabs; confidential or restricted material stays local unless explicitly authorized."
+        },
+        "spend": {
+          "policy": "required",
+          "reason": "Reserve and approve the exact character or credit allowance before synthesis, including subscription and free quota."
+        },
+        "consent": {
+          "policy": "conditional",
+          "reason": "A cloned or identifiable voice requires scoped speaker consent; otherwise use a licensed catalog voice."
+        },
+        "license": {
+          "policy": "required",
+          "reason": "Verify the selected voice and active plan permit the intended commercial, territory, and redistribution use."
+        }
+      },
+      "representation": {
+        "visualHuman": "none",
+        "voice": "synthetic",
+        "isRealPhotographedHuman": false,
+        "isRealHumanVoice": false,
+        "disclosure": "Natural synthetic speech is not a human recording."
+      },
+      "fallbackIds": ["consented-human-recording"],
+      "officialSource": "https://elevenlabs.io/docs/api-reference/text-to-speech/convert-with-timestamps"
+    },
+    {
+      "id": "consented-human-recording",
+      "name": "Consented human performance recording",
+      "truthState": "unavailable",
+      "access": {
+        "mode": "user-supplied-local-media",
+        "execution": "human",
+        "platforms": ["darwin", "win32"],
+        "authentication": "none",
+        "ingest": "local-file"
+      },
+      "capabilities": [
+        "real-photographed-human",
+        "real-human-voice",
+        "local-media-ingest",
+        "consent-evidence",
+        "performance-release"
+      ],
+      "credentialVariables": [],
+      "gates": {
+        "upload": {
+          "policy": "not-applicable",
+          "reason": "The base route ingests a local recording and does not send it to a third party."
+        },
+        "spend": {
+          "policy": "conditional",
+          "reason": "Approve performer, studio, location, or production fees before commissioning a recording."
+        },
+        "consent": {
+          "policy": "required",
+          "reason": "Record the performer likeness and voice consent, intended portrayal, media, territory, term, and revocation limits."
+        },
+        "license": {
+          "policy": "required",
+          "reason": "A signed performance and location release must cover the intended edit, distribution, and paid-ad context."
+        }
+      },
+      "representation": {
+        "visualHuman": "real-photographed",
+        "voice": "real-human",
+        "isRealPhotographedHuman": true,
+        "isRealHumanVoice": true,
+        "disclosure": "This is the only catalog route that can satisfy a real-photographed-human requirement by itself."
+      },
+      "fallbackIds": [],
+      "officialSource": "https://www.sagaftra.org/contracts-industry-resources"
+    },
+    {
+      "id": "heygen-synthetic-presenter",
+      "name": "HeyGen synthetic presenter",
+      "truthState": "unavailable",
+      "access": {
+        "mode": "cloud-api",
+        "execution": "cloud",
+        "platforms": ["darwin", "win32"],
+        "endpoint": "https://api.heygen.com/v3/videos",
+        "authentication": "environment-variable-or-user-oauth"
+      },
+      "capabilities": [
+        "synthetic-presenter",
+        "digital-twin",
+        "audio-to-avatar-video",
+        "lip-sync",
+        "asynchronous-download"
+      ],
+      "credentialVariables": ["HEYGEN_API_KEY"],
+      "gates": {
+        "upload": {
+          "policy": "required",
+          "reason": "Approve the exact presenter references and narration audio before third-party upload."
+        },
+        "spend": {
+          "policy": "required",
+          "reason": "Check and approve plan credits and the bounded generation estimate before job submission."
+        },
+        "consent": {
+          "policy": "required",
+          "reason": "Digital Twins and identifiable likeness or voice use require provider-compliant consent from the represented person."
+        },
+        "license": {
+          "policy": "required",
+          "reason": "Verify avatar, voice, uploaded media, and output rights for the intended commercial placement."
+        }
+      },
+      "representation": {
+        "visualHuman": "synthetic-presenter",
+        "voice": "supplied-or-synthetic",
+        "isRealPhotographedHuman": false,
+        "isRealHumanVoice": false,
+        "disclosure": "The rendered presenter is synthetic and must never be labelled as a real-photographed performance."
+      },
+      "fallbackIds": ["tavus-synthetic-presenter", "consented-human-recording"],
+      "officialSource": "https://developers.heygen.com/mcp/overview"
+    },
+    {
+      "id": "tavus-synthetic-presenter",
+      "name": "Tavus synthetic replica presenter",
+      "truthState": "unavailable",
+      "access": {
+        "mode": "cloud-api",
+        "execution": "cloud",
+        "platforms": ["darwin", "win32"],
+        "endpoint": "https://tavusapi.com/v2/videos",
+        "authentication": "environment-variable"
+      },
+      "capabilities": [
+        "synthetic-presenter",
+        "replica-video",
+        "external-audio-input",
+        "lip-sync",
+        "asynchronous-download"
+      ],
+      "credentialVariables": ["TAVUS_API_KEY"],
+      "gates": {
+        "upload": {
+          "policy": "required",
+          "reason": "Approve the replica inputs, script or audio URL, and any background media before disclosure to Tavus."
+        },
+        "spend": {
+          "policy": "required",
+          "reason": "Approve the bounded replica-video usage or plan charge before submission."
+        },
+        "consent": {
+          "policy": "required",
+          "reason": "Creating or using a human replica requires the represented person's provider-compliant consent."
+        },
+        "license": {
+          "policy": "required",
+          "reason": "Verify replica, audio, background, and output rights for the intended distribution and advertising scope."
+        }
+      },
+      "representation": {
+        "visualHuman": "synthetic-presenter",
+        "voice": "supplied-or-synthetic",
+        "isRealPhotographedHuman": false,
+        "isRealHumanVoice": false,
+        "disclosure": "The rendered replica is synthetic and must never be labelled as a real-photographed performance."
+      },
+      "fallbackIds": ["heygen-synthetic-presenter", "consented-human-recording"],
+      "officialSource": "https://docs.tavus.io/api-reference/video-request/create-video"
+    },
+    {
+      "id": "gemini-omni-video",
+      "name": "Google Gemini Omni Flash video",
+      "truthState": "unavailable",
+      "access": {
+        "mode": "cloud-api",
+        "execution": "cloud",
+        "platforms": ["darwin", "win32"],
+        "modelFamily": "gemini-omni-flash-preview",
+        "authentication": "environment-variable",
+        "runtimeDiscovery": "Resolve the current interaction schema, model availability, region, and limits before use."
+      },
+      "capabilities": [
+        "text-to-video",
+        "reference-image-to-video",
+        "subject-reference",
+        "generated-audio",
+        "stateful-conversational-editing",
+        "portrait-and-landscape"
+      ],
+      "credentialVariables": ["GEMINI_API_KEY", "GOOGLE_API_KEY"],
+      "gates": {
+        "upload": {
+          "policy": "conditional",
+          "reason": "Approve every reference image or video before cloud upload; regional video-edit restrictions must be checked first."
+        },
+        "spend": {
+          "policy": "required",
+          "reason": "Resolve the live model price and reserve the maximum seconds or credits before generation."
+        },
+        "consent": {
+          "policy": "conditional",
+          "reason": "Recognizable-person references require likeness rights and provider eligibility; unsupported people requests must fail closed."
+        },
+        "license": {
+          "policy": "required",
+          "reason": "Verify input rights, commercial output terms, SynthID or disclosure obligations, and target-market restrictions."
+        }
+      },
+      "representation": {
+        "visualHuman": "synthetic-generated",
+        "voice": "synthetic",
+        "isRealPhotographedHuman": false,
+        "isRealHumanVoice": false,
+        "disclosure": "Generated people and voices are synthetic even when photorealistic."
+      },
+      "fallbackIds": ["veo-3-1-video", "google-flow-supervised"],
+      "officialSource": "https://ai.google.dev/gemini-api/docs/omni"
+    },
+    {
+      "id": "veo-3-1-video",
+      "name": "Google Veo 3.1 video",
+      "truthState": "unavailable",
+      "access": {
+        "mode": "cloud-api",
+        "execution": "cloud",
+        "platforms": ["darwin", "win32"],
+        "modelFamily": "veo-3.1",
+        "authentication": "environment-variable",
+        "runtimeDiscovery": "Resolve the current long-running endpoint, exact model ID, region, duration, and resolution before use."
+      },
+      "capabilities": [
+        "text-to-video",
+        "image-to-video",
+        "reference-images",
+        "first-last-frame",
+        "video-extension",
+        "native-audio",
+        "720p-1080p-4k",
+        "asynchronous-generation"
+      ],
+      "credentialVariables": ["GEMINI_API_KEY", "GOOGLE_API_KEY"],
+      "gates": {
+        "upload": {
+          "policy": "conditional",
+          "reason": "Approve each image, last frame, or Veo source clip before it leaves the local run workspace."
+        },
+        "spend": {
+          "policy": "required",
+          "reason": "Resolve live per-second pricing and reserve the selected quality, duration, and attempt count before generation."
+        },
+        "consent": {
+          "policy": "conditional",
+          "reason": "Person references require likeness consent and a region/model eligibility check, including adult-only restrictions where applicable."
+        },
+        "license": {
+          "policy": "required",
+          "reason": "Verify reference rights, commercial terms, SynthID or disclosure requirements, and all target-market restrictions."
+        }
+      },
+      "representation": {
+        "visualHuman": "synthetic-generated",
+        "voice": "synthetic",
+        "isRealPhotographedHuman": false,
+        "isRealHumanVoice": false,
+        "disclosure": "Generated people and native audio are synthetic and cannot satisfy a real-photographed-human requirement."
+      },
+      "fallbackIds": ["gemini-omni-video", "google-flow-supervised"],
+      "officialSource": "https://ai.google.dev/gemini-api/docs/veo"
+    },
+    {
+      "id": "google-flow-supervised",
+      "name": "Google Flow supervised browser",
+      "truthState": "unavailable",
+      "access": {
+        "mode": "supervised-browser",
+        "execution": "cloud",
+        "platforms": ["darwin", "win32"],
+        "browserOnly": true,
+        "apiAvailable": false,
+        "supervision": "required",
+        "authentication": "interactive-google-session",
+        "sessionPolicy": "Never extract cookies or session tokens; pause for login, MFA, CAPTCHA, and account confirmation."
+      },
+      "capabilities": [
+        "user-supervised-generation",
+        "reference-ingredients",
+        "frames-to-video",
+        "interactive-project-workspace",
+        "browser-download"
+      ],
+      "credentialVariables": [],
+      "gates": {
+        "upload": {
+          "policy": "conditional",
+          "reason": "The user must approve every reference uploaded through the browser and confirm the active account and project."
+        },
+        "spend": {
+          "policy": "required",
+          "reason": "The visible Flow credit cost and bounded attempt count must be approved immediately before generation."
+        },
+        "consent": {
+          "policy": "conditional",
+          "reason": "People, character, voice, or identifiable reference media require documented consent and provider eligibility."
+        },
+        "license": {
+          "policy": "required",
+          "reason": "Verify source rights, active-plan output rights, watermark or provenance obligations, and intended distribution."
+        }
+      },
+      "representation": {
+        "visualHuman": "synthetic-generated",
+        "voice": "synthetic",
+        "isRealPhotographedHuman": false,
+        "isRealHumanVoice": false,
+        "disclosure": "Flow-generated people and voices are synthetic unless the final edit uses separately licensed real footage or audio."
+      },
+      "fallbackIds": ["gemini-omni-video", "veo-3-1-video"],
+      "officialSource": "https://support.google.com/flow/answer/16353333"
+    },
+    {
+      "id": "shutterstock-video",
+      "name": "Shutterstock licensed video",
+      "truthState": "unavailable",
+      "access": {
+        "mode": "cloud-api",
+        "execution": "cloud",
+        "platforms": ["darwin", "win32"],
+        "searchEndpoint": "https://api.shutterstock.com/v2/videos/search",
+        "licenseEndpoint": "https://api.shutterstock.com/v2/videos/licenses",
+        "authentication": "environment-variable"
+      },
+      "capabilities": [
+        "video-search",
+        "paid-license-transaction",
+        "licensed-download",
+        "rights-manifest"
+      ],
+      "credentialVariables": ["SHUTTERSTOCK_CLIENT_ID", "SHUTTERSTOCK_CLIENT_SECRET"],
+      "gates": {
+        "upload": {
+          "policy": "not-applicable",
+          "reason": "Searching and licensing catalog footage does not upload local production media."
+        },
+        "spend": {
+          "policy": "required",
+          "reason": "Pause immediately before the exact license transaction and record the approved price or license unit."
+        },
+        "consent": {
+          "policy": "conditional",
+          "reason": "Recognizable people, sensitive portrayals, endorsements, and editorial use require release and context review."
+        },
+        "license": {
+          "policy": "required",
+          "reason": "Store the license transaction ID, allowed media, territory, term, modifications, and redistribution restrictions."
+        }
+      },
+      "representation": {
+        "visualHuman": "licensed-real-footage",
+        "voice": "source-dependent",
+        "isRealPhotographedHuman": true,
+        "isRealHumanVoice": false,
+        "disclosure": "A clip is real photographed footage only when its decoded source and license metadata establish that fact."
+      },
+      "fallbackIds": ["pexels-video", "pixabay-video"],
+      "officialSource": "https://api-reference.shutterstock.com/"
+    },
+    {
+      "id": "pexels-video",
+      "name": "Pexels licensed video",
+      "truthState": "unavailable",
+      "access": {
+        "mode": "cloud-api",
+        "execution": "cloud",
+        "platforms": ["darwin", "win32"],
+        "searchEndpoint": "https://api.pexels.com/v1/videos/search",
+        "authentication": "environment-variable"
+      },
+      "capabilities": [
+        "video-search",
+        "free-download",
+        "orientation-filter",
+        "duration-filter",
+        "rights-manifest"
+      ],
+      "credentialVariables": ["PEXELS_API_KEY"],
+      "gates": {
+        "upload": {
+          "policy": "not-applicable",
+          "reason": "Catalog search and download do not upload local production media."
+        },
+        "spend": {
+          "policy": "not-applicable",
+          "reason": "The selected Pexels route is a free API/download path; any future paid product requires a new gate."
+        },
+        "consent": {
+          "policy": "conditional",
+          "reason": "Review recognizable-person portrayal, endorsement, brand, property, and sensitive-context risks before use."
+        },
+        "license": {
+          "policy": "required",
+          "reason": "Record asset ID, creator, source page, access date, license version, attribution decision, and use restrictions."
+        }
+      },
+      "representation": {
+        "visualHuman": "licensed-real-footage",
+        "voice": "source-dependent",
+        "isRealPhotographedHuman": true,
+        "isRealHumanVoice": false,
+        "disclosure": "A downloaded clip may depict a real person, but personal attributes or endorsement cannot be inferred."
+      },
+      "fallbackIds": ["pixabay-video", "shutterstock-video"],
+      "officialSource": "https://www.pexels.com/api/documentation/"
+    },
+    {
+      "id": "pixabay-video",
+      "name": "Pixabay licensed video",
+      "truthState": "unavailable",
+      "access": {
+        "mode": "cloud-api",
+        "execution": "cloud",
+        "platforms": ["darwin", "win32"],
+        "searchEndpoint": "https://pixabay.com/api/videos/",
+        "authentication": "environment-variable"
+      },
+      "capabilities": [
+        "video-search",
+        "free-download",
+        "category-filter",
+        "orientation-filter",
+        "rights-manifest"
+      ],
+      "credentialVariables": ["PIXABAY_API_KEY"],
+      "gates": {
+        "upload": {
+          "policy": "not-applicable",
+          "reason": "Catalog search and download do not upload local production media."
+        },
+        "spend": {
+          "policy": "not-applicable",
+          "reason": "The selected Pixabay route is a free API/download path; any future paid product requires a new gate."
+        },
+        "consent": {
+          "policy": "conditional",
+          "reason": "Review recognizable-person portrayal, endorsement, trademark, property, and sensitive-context risks before use."
+        },
+        "license": {
+          "policy": "required",
+          "reason": "Record asset ID, creator, source page, access date, license version, attribution decision, and third-party-rights limits."
+        }
+      },
+      "representation": {
+        "visualHuman": "licensed-real-footage",
+        "voice": "source-dependent",
+        "isRealPhotographedHuman": true,
+        "isRealHumanVoice": false,
+        "disclosure": "A downloaded clip may depict a real person, but personal attributes or endorsement cannot be inferred."
+      },
+      "fallbackIds": ["pexels-video", "shutterstock-video"],
+      "officialSource": "https://pixabay.com/api/docs/"
+    },
+    {
+      "id": "blender-local",
+      "name": "Blender local background compositor",
+      "truthState": "unavailable",
+      "access": {
+        "mode": "local-cli",
+        "execution": "local",
+        "platforms": ["darwin", "win32"],
+        "executables": ["blender"],
+        "darwinApplication": "/Applications/Blender.app/Contents/MacOS/Blender",
+        "probeArgs": ["--version"],
+        "renderMode": "background"
+      },
+      "capabilities": [
+        "background-render",
+        "python-automation",
+        "screen-image-texture",
+        "screen-video-texture",
+        "device-mockup",
+        "rgba-frame-sequence"
+      ],
+      "credentialVariables": [],
+      "gates": {
+        "upload": {
+          "policy": "not-applicable",
+          "reason": "Background rendering keeps source media and output inside the local run workspace."
+        },
+        "spend": {
+          "policy": "not-applicable",
+          "reason": "Rendering is local and has no provider charge; installation remains a separate machine-change approval."
+        },
+        "consent": {
+          "policy": "conditional",
+          "reason": "Any human likeness or voice embedded in the local source media still requires documented consent."
+        },
+        "license": {
+          "policy": "required",
+          "reason": "All textures, models, fonts, footage, and audio must be licensed for the intended composite and delivery."
+        }
+      },
+      "representation": {
+        "visualHuman": "none",
+        "voice": "none",
+        "isRealPhotographedHuman": false,
+        "isRealHumanVoice": false,
+        "disclosure": "Blender deterministically composites supplied media; it does not make a synthetic presenter real photographed."
+      },
+      "fallbackIds": ["ffmpeg-local"],
+      "officialSource": "https://docs.blender.org/manual/en/latest/advanced/command_line/arguments.html"
+    },
+    {
+      "id": "ffmpeg-local",
+      "name": "FFmpeg local media pipeline",
+      "truthState": "unavailable",
+      "access": {
+        "mode": "local-cli",
+        "execution": "local",
+        "platforms": ["darwin", "win32"],
+        "executables": ["ffmpeg", "ffprobe"],
+        "probeArgs": ["-version"]
+      },
+      "capabilities": [
+        "inspect",
+        "full-decode",
+        "transcode",
+        "compose",
+        "audio-mix",
+        "caption-burn-in",
+        "quality-check"
+      ],
+      "credentialVariables": [],
+      "gates": {
+        "upload": {
+          "policy": "not-applicable",
+          "reason": "The declared FFmpeg route processes media only inside the local run workspace."
+        },
+        "spend": {
+          "policy": "not-applicable",
+          "reason": "Local inspection, composition, encoding, and QA do not submit a provider charge."
+        },
+        "consent": {
+          "policy": "conditional",
+          "reason": "Human likeness or voice in any input remains subject to its original consent scope."
+        },
+        "license": {
+          "policy": "required",
+          "reason": "Every input, font, codec distribution path, and resulting edit must remain within its applicable rights."
+        }
+      },
+      "representation": {
+        "visualHuman": "none",
+        "voice": "none",
+        "isRealPhotographedHuman": false,
+        "isRealHumanVoice": false,
+        "disclosure": "FFmpeg transforms supplied media and cannot change its real-versus-synthetic provenance."
+      },
+      "fallbackIds": [],
+      "officialSource": "https://ffmpeg.org/documentation.html"
+    }
+  ]
+}

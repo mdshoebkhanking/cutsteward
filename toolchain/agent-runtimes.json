@@ -1,0 +1,87 @@
+{
+  "schemaVersion": 1,
+  "policy": {
+    "supportedPlatforms": ["darwin", "win32"],
+    "autoInstall": false,
+    "requireVersionProbe": true,
+    "requireConformanceBeforeConnection": true,
+    "neverScrapeInteractiveTui": true,
+    "neverCopyProviderCredentials": true
+  },
+  "runtimes": [
+    {
+      "id": "codex",
+      "name": "Codex",
+      "commands": ["codex"],
+      "versionArgs": ["--version"],
+      "protocolProbe": "codex-initialize-v1",
+      "preferredAdapter": "codex-app-server-stdio",
+      "fallback": "codex-sdk-or-exec-json",
+      "researchAnchor": "0.147.0",
+      "stability": "version-probed",
+      "capabilitiesToProbe": ["threads", "resume", "fork", "live-events", "steer", "interrupt", "approvals", "diffs", "usage"],
+      "source": "https://github.com/openai/codex"
+    },
+    {
+      "id": "claude",
+      "name": "Claude Code",
+      "commands": ["claude"],
+      "versionArgs": ["--version"],
+      "preferredAdapter": "claude-agent-sdk",
+      "fallback": "claude-headless-stream-json",
+      "researchAnchor": "typescript-sdk-0.3.226",
+      "stability": "version-probed",
+      "capabilitiesToProbe": ["sessions", "resume", "fork", "streaming", "interrupt", "tool-policy", "user-input", "hooks"],
+      "source": "https://github.com/anthropics/claude-agent-sdk-typescript"
+    },
+    {
+      "id": "gemini",
+      "name": "Gemini CLI",
+      "commands": ["gemini"],
+      "versionArgs": ["--version"],
+      "preferredAdapter": "acp-v1-stdio",
+      "fallback": "gemini-stream-json",
+      "researchAnchor": "runtime-probed-2026-08-09",
+      "stability": "experimental-until-conformance",
+      "capabilitiesToProbe": ["sessions", "resume", "plans", "permissions", "cancel", "diffs", "multimodal"],
+      "source": "https://github.com/google-gemini/gemini-cli"
+    },
+    {
+      "id": "hermes",
+      "name": "Hermes",
+      "commands": ["hermes"],
+      "versionArgs": ["--version"],
+      "preferredAdapter": "acp-v1-stdio",
+      "fallback": "hermes-run-control-http-sse",
+      "researchAnchor": "0.20.0",
+      "stability": "experimental-until-conformance",
+      "capabilitiesToProbe": ["sessions", "permissions", "cancel", "plans", "diffs", "clarification", "durable-runs"],
+      "source": "https://github.com/NousResearch/hermes-agent"
+    },
+    {
+      "id": "kimi",
+      "name": "Kimi Code",
+      "commands": ["kimi"],
+      "versionArgs": ["--version"],
+      "preferredAdapter": "acp-v1-stdio",
+      "fallback": null,
+      "researchAnchor": "1.49.0",
+      "stability": "experimental-until-conformance",
+      "capabilitiesToProbe": ["load", "list", "resume", "plans", "permissions", "cancel", "diffs", "multimodal"],
+      "knownUnsupported": ["acp-fork", "acp-general-elicitation"],
+      "source": "https://github.com/MoonshotAI/kimi-cli"
+    },
+    {
+      "id": "antigravity",
+      "name": "Antigravity",
+      "commands": ["agy"],
+      "versionArgs": ["--version"],
+      "preferredAdapter": "antigravity-python-sdk",
+      "fallback": "agy-headless-stream-json-restricted",
+      "researchAnchor": "sdk-0.1.10",
+      "stability": "alpha-feature-gated",
+      "capabilitiesToProbe": ["conversations", "streaming", "hooks", "human-in-loop", "tool-policy", "artifacts"],
+      "source": "https://github.com/google-antigravity/antigravity-sdk-python"
+    }
+  ]
+}

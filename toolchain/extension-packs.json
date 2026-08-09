@@ -1,0 +1,109 @@
+{
+  "schemaVersion": 1,
+  "policy": {
+    "defaultPacks": [],
+    "installOnlyAfterWorkflowSelection": true,
+    "requirePinnedVersionAndHash": true,
+    "requireLicenseReview": true,
+    "forbidImplicitModelDownloads": true,
+    "forbidAmbientPluginsAndCredentials": true
+  },
+  "packs": [
+    {
+      "id": "transcription-local",
+      "name": "Local transcription",
+      "tool": "whisper.cpp",
+      "version": "1.9.2",
+      "license": "MIT",
+      "source": "https://github.com/ggml-org/whisper.cpp",
+      "entrypoints": ["whisper-cli"],
+      "contribution": "Offline speech-to-text, SRT, VTT, and caption timing",
+      "gates": ["select-and-hash-model", "declare-model-size", "normalize-input-with-ffmpeg"],
+      "automatic": false
+    },
+    {
+      "id": "timeline-interchange",
+      "name": "Timeline interchange",
+      "tool": "OpenTimelineIO",
+      "version": "0.18.1",
+      "license": "Apache-2.0",
+      "source": "https://github.com/AcademySoftwareFoundation/OpenTimelineIO",
+      "entrypoints": ["otiotool", "otioconvert"],
+      "contribution": "Neutral timeline contract between agents, renderers, and editors",
+      "gates": ["pin-python-environment", "allowlist-adapters", "bound-otioz-extraction"],
+      "automatic": false
+    },
+    {
+      "id": "metadata-qc",
+      "name": "Metadata quality control",
+      "tool": "MediaInfo",
+      "version": "26.05",
+      "license": "BSD-style",
+      "source": "https://github.com/MediaArea/MediaInfo",
+      "entrypoints": ["mediainfo"],
+      "contribution": "Normalized technical metadata complementary to ffprobe",
+      "gates": ["disable-unneeded-network-libraries", "run-out-of-process"],
+      "automatic": false
+    },
+    {
+      "id": "scene-analysis",
+      "name": "Scene analysis",
+      "tool": "PySceneDetect",
+      "version": "0.7.1",
+      "license": "BSD-3-Clause",
+      "source": "https://github.com/Breakthrough/PySceneDetect",
+      "entrypoints": ["scenedetect"],
+      "contribution": "Scene boundaries, contact sheets, and rough-cut candidates",
+      "gates": ["pin-pre-1.0-api", "bound-resolution-and-frame-count", "isolate-decoder"],
+      "automatic": false
+    },
+    {
+      "id": "reference-qc",
+      "name": "Reference quality metrics",
+      "tool": "VMAF",
+      "version": "3.2.0",
+      "license": "BSD-2-Clause-Patent",
+      "source": "https://github.com/Netflix/vmaf",
+      "entrypoints": ["vmaf", "ffmpeg-libvmaf"],
+      "contribution": "Reference-based perceptual encode regression checks",
+      "gates": ["require-aligned-reference", "record-scaling-and-colorspace", "human-review-still-required"],
+      "automatic": false
+    },
+    {
+      "id": "motion-code",
+      "name": "Code-native motion",
+      "tool": "Remotion",
+      "version": "4.0.507",
+      "license": "Custom Remotion License",
+      "source": "https://github.com/remotion-dev/remotion",
+      "entrypoints": ["remotion"],
+      "contribution": "Deterministic React/TypeScript motion graphics and rendering",
+      "gates": ["company-license-review", "trusted-composition-only", "network-off-by-default"],
+      "automatic": false
+    },
+    {
+      "id": "rights-gated-acquisition",
+      "name": "Rights-gated media acquisition",
+      "tool": "yt-dlp",
+      "version": "2026.07.04",
+      "license": "Unlicense core; bundled components vary",
+      "source": "https://github.com/yt-dlp/yt-dlp",
+      "entrypoints": ["yt-dlp"],
+      "contribution": "Acquire user-owned, licensed, or explicitly authorized media",
+      "gates": ["lawful-source-assertion", "no-drm-bypass", "no-ambient-cookies-config-or-plugins", "disable-exec-options"],
+      "automatic": false
+    },
+    {
+      "id": "speech-edit-video-use",
+      "name": "Transcript-first speech editing (quarantined)",
+      "tool": "browser-use/video-use",
+      "version": "commit-92c2b34e44c205cbc2acae7f6ca7c1c219d5dd66",
+      "license": "MIT",
+      "source": "https://github.com/browser-use/video-use",
+      "entrypoints": ["helpers/render.py"],
+      "contribution": "Transcript-first EDL editing, timeline inspection, and disposable FFmpeg rendering",
+      "gates": ["exact-clean-commit", "no-ambient-skill-symlink", "no-upstream-env", "python-3.10-plus", "offline-smoke", "confined-content-hash-edl", "atomic-output-promotion", "ffprobe-full-decode", "macos-windows-conformance", "separate-cloud-transcription-approval"],
+      "automatic": false
+    }
+  ]
+}

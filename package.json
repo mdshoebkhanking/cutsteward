@@ -1,0 +1,106 @@
+{
+  "name": "cutsteward",
+  "version": "0.1.0",
+  "description": "The governed AI video studio: local-first orchestration, approvals, provenance, and release evidence.",
+  "private": true,
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mdshoebkhanking/cutsteward.git"
+  },
+  "homepage": "https://github.com/mdshoebkhanking/cutsteward#readme",
+  "bugs": {
+    "url": "https://github.com/mdshoebkhanking/cutsteward/issues"
+  },
+  "keywords": [
+    "ai-video-editor",
+    "agentic-video",
+    "video-production",
+    "human-in-the-loop",
+    "provenance",
+    "local-first",
+    "blender",
+    "ffmpeg"
+  ],
+  "type": "module",
+  "os": [
+    "darwin",
+    "win32"
+  ],
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "setup": "node scripts/framepilot.mjs setup",
+    "setup:full": "node scripts/framepilot.mjs setup --with-media",
+    "start": "node scripts/framepilot.mjs start",
+    "stop": "node scripts/framepilot.mjs stop",
+    "status": "node scripts/framepilot.mjs status",
+    "doctor": "node scripts/framepilot.mjs doctor",
+    "tools:doctor": "node scripts/toolchain.mjs doctor",
+    "tools:plan": "node scripts/toolchain.mjs plan",
+    "tools:catalog": "node scripts/toolchain.mjs catalog",
+    "tools:install": "node scripts/toolchain.mjs install",
+    "agents:doctor": "node scripts/agents.mjs doctor",
+    "agents:plan": "node scripts/agents.mjs plan",
+    "production:url": "node scripts/production.mjs url",
+    "production:list": "node scripts/production.mjs list",
+    "production:start": "node scripts/production.mjs start",
+    "production:inspect": "node scripts/production.mjs inspect",
+    "production:events": "node scripts/production.mjs events",
+    "production:command": "node scripts/production.mjs command",
+    "browser:probe": "node scripts/browser.mjs probe",
+    "browser:inspect": "node scripts/browser.mjs inspect",
+    "browser:start": "node scripts/browser.mjs start",
+    "browser:act": "node scripts/browser.mjs act",
+    "browser:close": "node scripts/browser.mjs close",
+    "stock:search": "node scripts/stock.mjs search",
+    "stock:select": "node scripts/stock.mjs select",
+    "demos:assets": "node scripts/fetch-demo-assets.mjs",
+    "release:check": "node scripts/release-check.mjs",
+    "production:smoke": "node scripts/production-live-smoke.mjs",
+    "video-use:install": "node scripts/video-use.mjs install",
+    "video-use:doctor": "node scripts/video-use.mjs doctor",
+    "video-use:smoke": "node scripts/video-use.mjs smoke",
+    "capcut": "node scripts/capcut.mjs",
+    "capcut:doctor": "node scripts/capcut.mjs doctor",
+    "capcut:smoke": "node scripts/capcut-smoke.mjs",
+    "blender": "node scripts/blender.mjs",
+    "blender:describe": "node scripts/blender.mjs describe",
+    "blender:doctor": "node scripts/blender.mjs doctor",
+    "blender:render": "node scripts/blender.mjs render",
+    "blender:smoke": "node scripts/blender.mjs smoke",
+    "dev": "vite --host 127.0.0.1",
+    "dev:server": "node --watch server/index.mjs",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@agentclientprotocol/sdk": "1.3.0",
+    "capcut-cli": "0.17.2",
+    "lucide-react": "1.30.0",
+    "playwright-core": "1.62.1",
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
+  },
+  "optionalDependencies": {
+    "@derhuerst/ffprobe-static": "5.3.0",
+    "ffmpeg-static": "5.3.0"
+  },
+  "allowScripts": {
+    "@derhuerst/ffprobe-static@5.3.0": true,
+    "ffmpeg-static@5.3.0": true,
+    "fsevents": false
+  },
+  "devDependencies": {
+    "@types/node": "24.10.13",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "@vitejs/plugin-react": "6.0.5",
+    "typescript": "7.0.2",
+    "vite": "8.2.1",
+    "vitest": "4.1.10"
+  }
+}
