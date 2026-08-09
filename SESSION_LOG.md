@@ -90,10 +90,10 @@ English-speaking markets, with premium vertical short-form output and a
 - The staged-index release checker rejects fake MP4 headers, performs bounded
   project-local FFprobe inspection plus full FFmpeg decode, and scans binary
   ASCII/UTF-16 metadata for redacted secret, private-path, and provider-record
-  leaks. It enforces all three public demos' exact duration, dimensions, 30 fps
-  rate, and audio stream. Its focused suite passes 16/16. The final staged
-  candidate passes with 288 tracked files; the release-check output is the
-  authoritative total-byte record for the exact staged index.
+  leaks. It enforces the current public walkthrough's exact duration,
+  dimensions, 30 fps rate, and audio stream, and deny-lists the retired public
+  demo hashes. The release-check output is the authoritative total-byte record
+  for the exact staged index.
 - Provider health: ElevenLabs, Google Veo, and Pexels/Pixabay adapters are
   registered but configuration-required because no provider credentials are
   stored in the project or current server environment.
@@ -106,33 +106,10 @@ English-speaking markets, with premium vertical short-form output and a
 
 ## Public demo release checkpoint
 
-- Landscape public master:
-  `demos/cutsteward-launch-demo-12s.mp4`
-  (SHA-256
-  `395617227b492d0e465fab58acafbf37b06c3d48837e9561399d585ff09a6a1f`,
-  4,131,899 bytes). It is a 1920x1080, H.264 High/yuv420p, BT.709 limited,
-  30 fps CFR encode with exactly 12.000 seconds / 360 decoded frames and 48 kHz
-  stereo AAC. Full decode, black-frame, duplicate-frame, and visual review
-  passed. It is intentionally music-led with the project-authored support bed
-  and no narration.
-- Vertical public master:
-  `demos/cutsteward-trust-demo-15s.mp4`
-  (SHA-256
-  `b41a07aedfb78de6e2b12899fe49470220c6e2ac0412f9aa6817d75f53d1646a`,
-  5,297,616 bytes). It is a 1080x1920, H.264/yuv420p, BT.709, 30 fps CFR
-  encode with exactly 15.000 seconds / 450 decoded frames and 48 kHz stereo
-  AAC. Full decode and whole-film visual review passed; HyperFrames reported
-  zero errors/warnings, zero layout failures across 246 checks, and 5/5 WCAG
-  checks. It is intentionally music-led with the project-authored support bed
-  and no narration.
-- A reported collapse near vertical frames 313/315/316 was isolated to the
-  compressed-PNG preview/display path, not the MP4 or composition. A deliberately
-  broken three-frame fixture correctly failed the red-capable detector, while
-  the real render passed the 300–330 frame sweep; software and VideoToolbox
-  decodes produced identical raw frame bytes, and direct HyperFrames snapshots
-  were healthy. Repacking the same PNG pixels without compression displayed
-  correctly, so no source change or third render was justified.
-- Narrated product walkthrough:
+- The retired 12-second launch and 15-second trust MP4s, GIF previews, and
+  posters were removed from the public release. Their exact hashes are blocked
+  by the staged-index release checker so they cannot be reintroduced silently.
+- Current narrated product walkthrough:
   `demos/cutsteward-product-walkthrough-30s.mp4`
   (SHA-256
   `09822c55be4fe00e576f76cbf249daca89b1a6e436458908e826e447df7c1989`,
@@ -149,12 +126,10 @@ English-speaking markets, with premium vertical short-form output and a
   retry, upscale, extension, lip sync, music generation, purchase, or top-up.
   The provider documents Image & Video as Beta, so that evaluation is local,
   Git-ignored, and absent from the released master.
-- All three public masters are byte-identical to their QA-passed source
-  renders. Their CutSteward posters/previews were extracted from immutable
-  masters, visually reviewed, hashed, linked from the README, and recorded in
-  `docs/ASSET_PROVENANCE.md`. The 12-second and 15-second demos remain
-  intentionally music-led with no narration; only the 30-second walkthrough is
-  narrated.
+- The public master is byte-identical to its QA-passed source render. Its
+  CutSteward poster and animated preview were extracted from the immutable
+  master, visually reviewed, hashed, placed at the top of the README, and
+  recorded in `docs/ASSET_PROVENANCE.md`.
 
 ## Completed integration checkpoint
 

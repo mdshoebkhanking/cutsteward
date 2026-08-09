@@ -4,18 +4,18 @@ CutSteward's source code is released under the repository's [MIT License](LICENS
 That license does **not** replace the licenses or terms attached to third-party
 fonts, stock media, models, APIs, websites, or generated outputs.
 
-## Demo stock footage
+## Archived editable example stock footage
 
-The 12-second and 15-second published demo videos contain transformed excerpts
-from Pexels footage. The raw stock files are intentionally excluded from the
-repository.
+Two retained editable composition examples reference Pexels footage. Their old
+public MP4, GIF, and poster derivatives are retired and are not distributed in
+the repository. The raw stock files are also intentionally excluded.
 
 - Pexels video 30185573, “Hands Typing on Laptop in Modern Office Environment,”
   by Jakub Zerdzicki: https://www.pexels.com/video/hands-typing-on-laptop-in-modern-office-environment-30185573/
 - Pexels video 12893579, “Hands Typing on Laptop Keyboard”: https://www.pexels.com/video/hands-typing-on-laptop-keyboard-12893579/
 - Pexels license: https://www.pexels.com/legal-pages/license/
 
-Each demo's `assets/stock/SOURCE_MANIFEST.json` records the exact source URL,
+Each example's `assets/stock/SOURCE_MANIFEST.json` records the exact source URL,
 download URL when known, source hash, rendition metadata, and transformation
 policy. Pexels footage does not imply that any depicted person endorses
 CutSteward.
@@ -45,9 +45,9 @@ only the transformed mixed soundtrack is distributed. The walkthrough also
 states its evidence boundary truthfully: the planning demonstration and the
 certified public-safe conformance delivery shown later are separate stored runs.
 
-The full public-media ledger, including project-authored SVG/audio assets,
-provider-output facts, derived posters and previews, excluded legacy files, and
-generation/credit receipts, is in
+The full public-media ledger, including project-authored assets,
+provider-output facts, the current walkthrough derivatives, excluded legacy
+files, and generation/credit receipts, is in
 [docs/ASSET_PROVENANCE.md](docs/ASSET_PROVENANCE.md).
 
 ## Fonts

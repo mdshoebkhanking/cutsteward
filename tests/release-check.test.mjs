@@ -11,16 +11,13 @@ const projectDirectory = path.resolve(import.meta.dirname, "..");
 const releaseCheckScript = path.join(projectDirectory, "scripts/release-check.mjs");
 const temporaryDirectories = [];
 let mediaFixtureDirectory;
-let validLaunchDemo;
-let validTrustDemo;
 let validWalkthroughDemo;
-let sensitiveMetadataLaunchDemo;
+let sensitiveMetadataWalkthroughDemo;
 let sensitiveMetadataValues;
 let wrongDurationWalkthroughDemo;
-let wrongDurationLaunchDemo;
-let wrongDimensionsLaunchDemo;
-let wrongFrameRateLaunchDemo;
-let videoOnlyLaunchDemo;
+let wrongDimensionsWalkthroughDemo;
+let wrongFrameRateWalkthroughDemo;
+let videoOnlyWalkthroughDemo;
 
 function run(command, argumentsList, options = {}) {
   const result = spawnSync(command, argumentsList, {
@@ -126,12 +123,10 @@ async function createRepository(files) {
 }
 
 function validReleaseFiles(extra = {}) {
-  if (!validLaunchDemo || !validTrustDemo) {
+  if (!validWalkthroughDemo) {
     throw new Error("Release-check media fixtures were not initialized");
   }
   return {
-    "demos/cutsteward-launch-demo-12s.mp4": validLaunchDemo,
-    "demos/cutsteward-trust-demo-15s.mp4": validTrustDemo,
     "demos/cutsteward-product-walkthrough-30s.mp4": validWalkthroughDemo,
     ...extra
   };
@@ -148,37 +143,25 @@ beforeAll(async () => {
   mediaFixtureDirectory = await mkdtemp(
     path.join(tmpdir(), "cutsteward-release-check-media-")
   );
-  validLaunchDemo = await createMediaFixture({
-    filename: "launch.mp4",
-    duration: 12,
+  validWalkthroughDemo = await createMediaFixture({
+    filename: "walkthrough.mp4",
+    duration: 30,
     width: 1920,
     height: 1080
-  });
-  validTrustDemo = await createMediaFixture({
-    filename: "trust.mp4",
-    duration: 15,
-    width: 1080,
-    height: 1920
   });
   sensitiveMetadataValues = {
     secret: ["sk", "proj", "M".repeat(32)].join("-"),
     privatePath: ["", "Users", "binary-owner", "private", "source.mov"].join("/"),
     providerRecordId: ["elevenlabs", "generation", "record", "R".repeat(24)].join("_")
   };
-  sensitiveMetadataLaunchDemo = await createMediaMetadataFixture({
-    filename: "launch-sensitive-metadata.mp4",
-    sourceFilename: "launch.mp4",
+  sensitiveMetadataWalkthroughDemo = await createMediaMetadataFixture({
+    filename: "walkthrough-sensitive-metadata.mp4",
+    sourceFilename: "walkthrough.mp4",
     metadata: {
       title: `token=${sensitiveMetadataValues.secret}`,
       comment: `source=${sensitiveMetadataValues.privatePath}`,
       description: `history_item_id=${sensitiveMetadataValues.providerRecordId}`
     }
-  });
-  validWalkthroughDemo = await createMediaFixture({
-    filename: "walkthrough.mp4",
-    duration: 30,
-    width: 1920,
-    height: 1080
   });
   wrongDurationWalkthroughDemo = await createMediaFixture({
     filename: "walkthrough-29s.mp4",
@@ -186,28 +169,22 @@ beforeAll(async () => {
     width: 1920,
     height: 1080
   });
-  wrongDurationLaunchDemo = await createMediaFixture({
-    filename: "launch-11s.mp4",
-    duration: 11,
-    width: 1920,
-    height: 1080
-  });
-  wrongDimensionsLaunchDemo = await createMediaFixture({
-    filename: "launch-1280x720.mp4",
-    duration: 12,
+  wrongDimensionsWalkthroughDemo = await createMediaFixture({
+    filename: "walkthrough-1280x720.mp4",
+    duration: 30,
     width: 1280,
     height: 720
   });
-  wrongFrameRateLaunchDemo = await createMediaFixture({
-    filename: "launch-24fps.mp4",
-    duration: 12,
+  wrongFrameRateWalkthroughDemo = await createMediaFixture({
+    filename: "walkthrough-24fps.mp4",
+    duration: 30,
     width: 1920,
     height: 1080,
     frameRate: 24
   });
-  videoOnlyLaunchDemo = await createMediaFixture({
-    filename: "launch-video-only.mp4",
-    duration: 12,
+  videoOnlyWalkthroughDemo = await createMediaFixture({
+    filename: "walkthrough-video-only.mp4",
+    duration: 30,
     width: 1920,
     height: 1080,
     withAudio: false
@@ -229,13 +206,28 @@ afterEach(async () => {
 });
 
 describe("public release gate", () => {
+  it("passes when the current product walkthrough is the only public demo", async () => {
+    const directory = await createRepository({
+      "demos/cutsteward-product-walkthrough-30s.mp4": validWalkthroughDemo,
+      "README.md": [
+        "[Watch the product walkthrough](demos/cutsteward-product-walkthrough-30s.mp4)",
+        "![Animated product walkthrough](demos/previews/cutsteward-product-walkthrough.gif)",
+        ""
+      ].join("\n"),
+      "demos/previews/cutsteward-product-walkthrough.gif": Buffer.from("GIF89a")
+    });
+
+    const result = runReleaseCheck(directory);
+
+    expect(result.status).toBe(0);
+    expect(result.stdout).toContain("Release check passed");
+    expect(result.stderr).toBe("");
+  });
+
   it("passes a clean staged release index", async () => {
     const directory = await createRepository(
       validReleaseFiles({
-        "README.md": [
-          "[Launch](demos/cutsteward-launch-demo-12s.mp4)",
-          "[Trust](demos/cutsteward-trust-demo-15s.mp4)"
-        ].join("\n")
+        "README.md": "[Walkthrough](demos/cutsteward-product-walkthrough-30s.mp4)\n"
       })
     );
 
@@ -248,8 +240,7 @@ describe("public release gate", () => {
 
   it("rejects a missing required demo and a Markdown link to it", async () => {
     const directory = await createRepository({
-      "demos/cutsteward-launch-demo-12s.mp4": minimalMp4(),
-      "README.md": "[Trust](demos/cutsteward-trust-demo-15s.mp4)\n"
+      "README.md": "[Walkthrough](demos/cutsteward-product-walkthrough-30s.mp4)\n"
     });
 
     const result = runReleaseCheck(directory);
@@ -288,20 +279,21 @@ describe("public release gate", () => {
 
   it("rejects secrets, private paths, and provider record IDs in staged binary metadata", async () => {
     const files = validReleaseFiles();
-    files["demos/cutsteward-launch-demo-12s.mp4"] = sensitiveMetadataLaunchDemo;
+    files["demos/cutsteward-product-walkthrough-30s.mp4"] =
+      sensitiveMetadataWalkthroughDemo;
     const directory = await createRepository(files);
 
     const result = runReleaseCheck(directory);
 
     expect(result.status).toBe(1);
     expect(result.stderr).toContain(
-      "[metadata-secret] demos/cutsteward-launch-demo-12s.mp4"
+      "[metadata-secret] demos/cutsteward-product-walkthrough-30s.mp4"
     );
     expect(result.stderr).toContain(
-      "[metadata-path] demos/cutsteward-launch-demo-12s.mp4"
+      "[metadata-path] demos/cutsteward-product-walkthrough-30s.mp4"
     );
     expect(result.stderr).toContain(
-      "[metadata-id] demos/cutsteward-launch-demo-12s.mp4"
+      "[metadata-id] demos/cutsteward-product-walkthrough-30s.mp4"
     );
     expect(result.stderr).not.toContain(sensitiveMetadataValues.secret);
     expect(result.stderr).not.toContain("binary-owner");
@@ -311,8 +303,7 @@ describe("public release gate", () => {
   it("allows larger public demos but rejects an ordinary file over five MiB", async () => {
     const sixMiB = 6 * 1024 * 1024;
     const directory = await createRepository({
-      "demos/cutsteward-launch-demo-12s.mp4": mp4WithSize(sixMiB),
-      "demos/cutsteward-trust-demo-15s.mp4": mp4WithSize(sixMiB),
+      "demos/cutsteward-product-walkthrough-30s.mp4": mp4WithSize(sixMiB),
       "large.bin": Buffer.alloc(5 * 1024 * 1024 + 1)
     });
 
@@ -325,44 +316,41 @@ describe("public release gate", () => {
 
   it("rejects a required demo that is not an MP4 ftyp file", async () => {
     const directory = await createRepository({
-      "demos/cutsteward-launch-demo-12s.mp4": Buffer.from("not a media file"),
-      "demos/cutsteward-trust-demo-15s.mp4": minimalMp4()
+      "demos/cutsteward-product-walkthrough-30s.mp4": Buffer.from("not a media file")
     });
 
     const result = runReleaseCheck(directory);
 
     expect(result.status).toBe(1);
     expect(result.stderr).toContain(
-      "[mp4] demos/cutsteward-launch-demo-12s.mp4"
+      "[mp4] demos/cutsteward-product-walkthrough-30s.mp4"
     );
   });
 
   it("rejects an MP4-shaped header that is not decodable media", async () => {
     const directory = await createRepository({
-      "demos/cutsteward-launch-demo-12s.mp4": minimalMp4(),
-      "demos/cutsteward-trust-demo-15s.mp4": validTrustDemo
+      "demos/cutsteward-product-walkthrough-30s.mp4": minimalMp4()
     });
 
     const result = runReleaseCheck(directory);
 
     expect(result.status).toBe(1);
     expect(result.stderr).toContain(
-      "[media] demos/cutsteward-launch-demo-12s.mp4 is not decodable media"
+      "[media] demos/cutsteward-product-walkthrough-30s.mp4 is not decodable media"
     );
     expect(result.stderr).not.toContain(mediaFixtureDirectory);
   });
 
   it("rejects a decodable required demo with the wrong exact duration", async () => {
     const directory = await createRepository({
-      "demos/cutsteward-launch-demo-12s.mp4": wrongDurationLaunchDemo,
-      "demos/cutsteward-trust-demo-15s.mp4": validTrustDemo
+      "demos/cutsteward-product-walkthrough-30s.mp4": wrongDurationWalkthroughDemo
     });
 
     const result = runReleaseCheck(directory);
 
     expect(result.status).toBe(1);
     expect(result.stderr).toContain(
-      "[media-spec] demos/cutsteward-launch-demo-12s.mp4 must be exactly 12.000 seconds"
+      "[media-spec] demos/cutsteward-product-walkthrough-30s.mp4 must be exactly 30.000 seconds"
     );
   });
 
@@ -382,43 +370,40 @@ describe("public release gate", () => {
 
   it("rejects a decodable required demo with the wrong dimensions", async () => {
     const directory = await createRepository({
-      "demos/cutsteward-launch-demo-12s.mp4": wrongDimensionsLaunchDemo,
-      "demos/cutsteward-trust-demo-15s.mp4": validTrustDemo
+      "demos/cutsteward-product-walkthrough-30s.mp4": wrongDimensionsWalkthroughDemo
     });
 
     const result = runReleaseCheck(directory);
 
     expect(result.status).toBe(1);
     expect(result.stderr).toContain(
-      "[media-spec] demos/cutsteward-launch-demo-12s.mp4 must be 1920x1080"
+      "[media-spec] demos/cutsteward-product-walkthrough-30s.mp4 must be 1920x1080"
     );
   });
 
   it("rejects a decodable required demo with the wrong frame rate", async () => {
     const directory = await createRepository({
-      "demos/cutsteward-launch-demo-12s.mp4": wrongFrameRateLaunchDemo,
-      "demos/cutsteward-trust-demo-15s.mp4": validTrustDemo
+      "demos/cutsteward-product-walkthrough-30s.mp4": wrongFrameRateWalkthroughDemo
     });
 
     const result = runReleaseCheck(directory);
 
     expect(result.status).toBe(1);
     expect(result.stderr).toContain(
-      "[media-spec] demos/cutsteward-launch-demo-12s.mp4 must be exactly 30fps"
+      "[media-spec] demos/cutsteward-product-walkthrough-30s.mp4 must be exactly 30fps"
     );
   });
 
   it("rejects a decodable required demo without an audio stream", async () => {
     const directory = await createRepository({
-      "demos/cutsteward-launch-demo-12s.mp4": videoOnlyLaunchDemo,
-      "demos/cutsteward-trust-demo-15s.mp4": validTrustDemo
+      "demos/cutsteward-product-walkthrough-30s.mp4": videoOnlyWalkthroughDemo
     });
 
     const result = runReleaseCheck(directory);
 
     expect(result.status).toBe(1);
     expect(result.stderr).toContain(
-      "[media-spec] demos/cutsteward-launch-demo-12s.mp4 must contain an audio stream"
+      "[media-spec] demos/cutsteward-product-walkthrough-30s.mp4 must contain an audio stream"
     );
   });
 

@@ -16,10 +16,9 @@ Initial public preview.
 - Supervised, run-isolated, read-only browser automation with context-wide
   network guards and append-only evidence.
 - FFmpeg/full-decode media verification, playback, artifact hashes, and QA.
-- Three English-first demos for international audiences: two short,
-  music-led launch films with no narration, plus a 30-second narrated product
-  walkthrough built from authentic CutSteward screen recordings and a
-  separate public-safe verified-delivery proof sequence.
+- One English-first 30-second narrated product walkthrough for international
+  audiences, built from authentic CutSteward screen recordings and a separate
+  public-safe verified-delivery proof sequence.
 - Detailed provider-agnostic production workflow and clip-generation playbook.
 
 This is a preview, not a promise that every provider, website, or local agent is

@@ -2,6 +2,12 @@
 
 **The governed AI video studio.**
 
+<p align="center">
+  <a href="demos/cutsteward-product-walkthrough-30s.mp4"><img src="demos/previews/cutsteward-product-walkthrough.gif" width="800" alt="Watch the narrated 30-second CutSteward governed product walkthrough"></a>
+</p>
+
+<p align="center"><strong>▶ Click the preview to watch the full 30-second walkthrough with sound.</strong></p>
+
 [![CI](https://github.com/mdshoebkhanking/cutsteward/actions/workflows/ci.yml/badge.svg)](https://github.com/mdshoebkhanking/cutsteward/actions/workflows/ci.yml)
 [![MIT License](https://img.shields.io/badge/license-MIT-CDBA91.svg)](LICENSE)
 [![Node 22.12+](https://img.shields.io/badge/node-22.12%2B-050505.svg)](package.json)
@@ -27,35 +33,16 @@ supports **macOS and Windows only** today.
 The public-name collision screen and retained compatibility namespace are
 documented in [the CutSteward brand decision](docs/BRAND_DECISION.md).
 
-## Watch the demos
+## Product walkthrough
 
-The three English-first films are designed for international English-speaking
-audiences. They combine authentic CutSteward interface evidence, restrained
-motion design, rights-recorded media, concise English copy, and verified final
-encoding. The two short launch films are intentionally music-led with no
-narration; the 30-second product walkthrough adds English narration and a
-real-screen tour of the governed workflow.
+The English-first film is designed for international English-speaking
+audiences. It combines authentic CutSteward interface evidence, restrained
+motion design, rights-recorded media, clear narration, and verified final
+encoding.
 
-**Animated previews — click any preview to watch the full-quality MP4 with
-audio.**
-
-<p align="center">
-  <a href="demos/cutsteward-product-walkthrough-30s.mp4"><img src="demos/previews/cutsteward-product-walkthrough.gif" width="720" alt="Animated preview of the narrated 30-second CutSteward governed product walkthrough"></a>
-</p>
-
-<p align="center">
-  <a href="demos/cutsteward-launch-demo-12s.mp4"><img src="demos/previews/cutsteward-launch-demo.gif" width="720" alt="Animated preview of the 12-second CutSteward production cockpit launch film"></a>
-</p>
-
-<p align="center">
-  <a href="demos/cutsteward-trust-demo-15s.mp4"><img src="demos/previews/cutsteward-trust-demo.gif" width="360" alt="Animated preview of the 15-second CutSteward trust-first social short"></a>
-</p>
-
-| Demo | Format | What it proves |
+| Video | Format | What it proves |
 | --- | --- | --- |
 | [Governed product walkthrough](demos/cutsteward-product-walkthrough-30s.mp4) | 30s · 16:9 · narrated | Prompt → guidance → rights → planned shots → separate verified delivery → decode/hash/approval proof |
-| [Production cockpit launch film](demos/cutsteward-launch-demo-12s.mp4) | 12s · 16:9 | Brief → visible production → exact approval → verified output |
-| [Trust-first social short](demos/cutsteward-trust-demo-15s.mp4) | 15s · 9:16 | Fast short-form pacing, mobile UI proof, durable receipts, premium CTA |
 
 The walkthrough truthfully bridges between two separate stored runs: its
 demonstrated planning run did not produce the certified public-safe conformance
@@ -67,19 +54,8 @@ Exact source pages, rendition hashes, provider-output facts, creator metadata
 when verified, and transformation rules are recorded in each demo's manifest
 and in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
-To reproduce the two stock-driven editable demo compositions after cloning,
-fetch the exact rights-recorded Pexels renditions and verify their SHA-256
-hashes locally:
-
-```sh
-npm run demos:assets
-```
-
-The fetcher accepts only the allowlisted HTTPS media host, follows bounded
-same-host redirects, refuses to replace a mismatched existing file, and stores
-the raw sources only in Git-ignored demo asset folders. The narrated
-walkthrough's editable HyperFrames project, capture evidence, captions, audio
-mix, and generation receipt are retained in
+The walkthrough's editable HyperFrames project, capture evidence, captions,
+audio mix, and generation receipt are retained in
 [`videos/cutsteward-30s-promo`](videos/cutsteward-30s-promo/README.md).
 
 ## Why CutSteward is different

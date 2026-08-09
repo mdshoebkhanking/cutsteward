@@ -8,16 +8,10 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 
 const require = createRequire(import.meta.url);
-const REQUIRED_DEMOS = [
-  "demos/cutsteward-launch-demo-12s.mp4",
-  "demos/cutsteward-trust-demo-15s.mp4",
-  "demos/cutsteward-product-walkthrough-30s.mp4"
-];
+const REQUIRED_DEMOS = ["demos/cutsteward-product-walkthrough-30s.mp4"];
 const REQUIRED_DEMO_SET = new Set(REQUIRED_DEMOS);
 const REQUIRED_DEMO_SPECS = new Map([
-  [REQUIRED_DEMOS[0], { durationSeconds: 12, width: 1920, height: 1080, frameRate: 30 }],
-  [REQUIRED_DEMOS[1], { durationSeconds: 15, width: 1080, height: 1920, frameRate: 30 }],
-  [REQUIRED_DEMOS[2], { durationSeconds: 30, width: 1920, height: 1080, frameRate: 30 }]
+  [REQUIRED_DEMOS[0], { durationSeconds: 30, width: 1920, height: 1080, frameRate: 30 }]
 ]);
 const MAX_REGULAR_FILE_BYTES = 5 * 1024 * 1024;
 const MAX_DEMO_FILE_BYTES = 25 * 1024 * 1024;
@@ -31,7 +25,13 @@ const RETIRED_ASSET_SHA256 = new Set([
   "9b4b56e167b6e8553999c1baf8fbc7c8bb31b0d99c04e897acec339a8125597f",
   "dfec2a58a0b1e8f353e30b4b058fc4bc3e52078f0c4591580073cec5d19c896b",
   "ee16449e7bd610da693cc55a01893ebef5e6825c812252ce67fe9eb4def46749",
-  "cbd109b0ce867b79c9fe984e607e11f23ebd4067f27623ee1e16555fe0794e9f"
+  "cbd109b0ce867b79c9fe984e607e11f23ebd4067f27623ee1e16555fe0794e9f",
+  "395617227b492d0e465fab58acafbf37b06c3d48837e9561399d585ff09a6a1f",
+  "b41a07aedfb78de6e2b12899fe49470220c6e2ac0412f9aa6817d75f53d1646a",
+  "9610870a09774bff3ad2fc15716623f83d380139becc7cf4c12b697c27bacbef",
+  "a8f87fcb6559c83958aa438ad9caf1af6db673f8777ea60d8b8261ca1e4b0a97",
+  "0aa1e070f3826b10728da5f5a6ac9bc33cbd3e3507c30c5c49d5a07de48facfb",
+  "7ffcc236c235fbf87b687f7aa90ee27eb1abdb1fabba52297c2ee6044a1b65fd"
 ]);
 const ALLOWED_SECRET_FIXTURE_SHA256 = new Set([
   "24b10445095b299e57f231c64a747f01c3732cd34746eeef0e0e09c7f7e54505",
