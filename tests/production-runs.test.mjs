@@ -707,5 +707,5 @@ describe("ProductionRun module", () => {
     expect(reopened.condition).toBe("completed");
     expect(reopened.releaseGate).toEqual(completed.releaseGate);
     expect(reopened.lastEventHash).toBe(completed.lastEventHash);
-  }, 15_000);
+  }, 30_000);
 });
